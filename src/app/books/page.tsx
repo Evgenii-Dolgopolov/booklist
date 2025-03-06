@@ -1,7 +1,7 @@
-export default function BooksPage() {
+export default function BookList() {
   return (
       <>
-        <h1>Books Page</h1>
+        <h1>Book List Page</h1>
       </>
   )
 }
