@@ -1,7 +1,5 @@
-export default function AddBook() {
-  return (
-      <>
-        <h1>Add Book Page</h1>
-      </>
-  )
+import BookForm from "@/components/books/BookForm"
+
+export default function BookFormPage() {
+  return <BookForm />
 }
