@@ -1,5 +1,5 @@
 // src/utils/transformers.ts
-import { BookDetails, BookDetailsDbRecord } from "@/types"
+import { BookDetails, BookDetailsDbRecord } from "@/types/types"
 
 export function transformDbRecordToBookDetails(
   record: BookDetailsDbRecord
