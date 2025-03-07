@@ -1,7 +1,7 @@
 
 "use client"
 import React, { ChangeEvent, FormEvent, useState } from "react"
-import { formatDateToDDMMYYYY } from "@/utils/formatters"
+// import { formatDateToDDMMYYYY } from "@/utils/formatters"
 import { BookDetails } from "@/types/types"
 
 export default function BookForm() {
@@ -15,8 +15,8 @@ export default function BookForm() {
     note: "",
   })
  
-  const [isLoading, setIsLoading] = useState(false)
-  const [isError, setIsError] = useState<"string" | null>(null)
+  // const [isLoading, setIsLoading] = useState(false)
+  // const [isError, setIsError] = useState<"string" | null>(null)
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
