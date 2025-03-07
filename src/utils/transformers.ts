@@ -19,15 +19,18 @@ export function transformDbRecordToBookDetails(
 export function transformBookDetailsToDbRecord(
   book: Partial<BookDetails>
 ): BookDetailsDbRecord {
+  // Check if required fields exist, throw error if not
+  if (!book.id || !book.title || !book.author || !book.isbn) {
+    throw new Error("Missing required book details")
+  }
+
   return {
-    id: book.id,
+    id: book.id, // Now TypeScript knows this is not undefined
     title: book.title,
     author: book.author,
     isbn: book.isbn,
-    date_read:
-      book.dateRead instanceof Date
-        ? book.dateRead.toISOString().split("T")[0]
-        : null,
+    // Add the rest of your transformation logic here
+    date_read: book.dateRead ? new Date(book.dateRead).toISOString() : null,
     rating: book.rating,
     description: book.description,
     note: book.note,
