@@ -1,18 +1,12 @@
 // src/app/books/[bookId]/page.tsx
-
 import BookDetails from "@/components/books/BookDetail"
 
-export default async function BookDetailsPage({
+export default function BookDetailsPage({
   params,
 }: {
-  params: Promise<{ bookId: string }>
+  params: { bookId: string }
 }) {
-  
-  const bookId = (await params).bookId
+  const bookId = params.bookId
 
-  return (
-    <>
-      <BookDetails bookId={bookId} />
-    </>
-  )
+  return <BookDetails bookId={bookId} />
 }

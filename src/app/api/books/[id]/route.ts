@@ -1,5 +1,4 @@
 // src/app/api/books/[id]/route.ts
-
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/services/db"
 

@@ -23,6 +23,7 @@ export default function DeleteBookButton({
   const openConfirm = () => setIsConfirmOpen(true)
   const closeConfirm = () => setIsConfirmOpen(false)
 
+  // src/components/books/DeleteBookButton.tsx - update the fetch URL
   const handleDelete = async () => {
     setIsDeleting(true)
     setError(null)

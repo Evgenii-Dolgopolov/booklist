@@ -1,25 +1,148 @@
-// src/components/books/BookForm.tsx
+// src/components/books/EditBookForm.tsx
 "use client"
 
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { useBookForm } from "@/hooks/useBookForm"
 import Card from "@/components/common/Card"
 import Button from "@/components/common/Button"
-import Link from "next/link"
+import { BookDetails } from "@/types/types"
+import { useRouter } from "next/navigation"
 
-export default function BookForm() {
-  const { bookDetails, error, isLoading, handleChange, handleSubmit } =
-    useBookForm()
+interface EditBookFormProps {
+  bookId: string
+  initialData?: Partial<BookDetails>
+}
+
+export default function EditBookForm({
+  bookId,
+  initialData,
+}: EditBookFormProps) {
+  const [isLoading, setIsLoading] = useState(!initialData)
+  const [fetchError, setFetchError] = useState<string | null>(null)
+  const router = useRouter()
+
+  const {
+    bookDetails,
+    setBookDetails,
+    error: saveError,
+    handleChange,
+  } = useBookForm(initialData || {})
+
+  const fetchBookData = async () => {
+    if (initialData) return
+
+    try {
+      const response = await fetch(`/api/books/${bookId}`)
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch book details")
+      }
+
+      const data = await response.json()
+      setBookDetails(data.data)
+    } catch (err) {
+      setFetchError(
+        err instanceof Error ? err.message : "Failed to load book details"
+      )
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // In the handleSubmit function:
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const response = await fetch(`/api/books/${bookId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookDetails),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(
+          errorData.error || `Failed to update book (${response.status})`
+        )
+      }
+
+      // Navigate back to book details page
+      router.push(`/books/${bookId}`)
+      router.refresh()
+    } catch (err) {
+      console.error("Error updating book:", err)
+      setFetchError(
+        err instanceof Error ? err.message : "Failed to update book"
+      )
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <Card
+          padding="large"
+          border={true}
+          className="flex justify-center items-center py-12"
+        >
+          <div className="text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+            <p className="mt-4 text-gray-700">Loading book details...</p>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  if (fetchError) {
+    return (
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <Card padding="large" border={true} className="bg-red-50">
+          <div className="text-center py-8">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-12 w-12 text-red-500 mx-auto mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <h2 className="text-xl font-medium text-red-800 mb-2">
+              Error Loading Book
+            </h2>
+            <p className="text-red-700">{fetchError}</p>
+            <div className="mt-6">
+              <Button isLink={true} href="/books" variant="secondary">
+                Back to Books
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold mb-6">Add New Book</h1>
+      <h1 className="text-2xl font-bold mb-6">Edit Book</h1>
 
       <Card className="mb-6" padding="large" border={true}>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
+          {saveError && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-              {error}
+              {saveError}
             </div>
           )}
 
@@ -134,11 +257,11 @@ export default function BookForm() {
           </div>
 
           <div className="flex justify-end space-x-4">
-            <Button isLink={true} href="/books" variant="secondary">
+            <Button isLink={true} href={`/books/${bookId}`} variant="secondary">
               Cancel
             </Button>
             <Button type="submit" variant="primary" disabled={isLoading}>
-              {isLoading ? "Adding..." : "Add Book"}
+              {isLoading ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>
