@@ -1,48 +1,21 @@
-
+// src/components/books/BookForm.tsx
 "use client"
-import React, { ChangeEvent, FormEvent, useState } from "react"
-// import { formatDateToDDMMYYYY } from "@/utils/formatters"
-import { BookDetails } from "@/types/types"
+import React from "react"
+import { useBookForm } from "@/hooks/useBookForm"
 
 export default function BookForm() {
-  const [bookDetails, setBookDetails] = useState<Partial<BookDetails>>({
-    title: "",
-    author: "",
-    isbn: "",
-    dateRead: undefined,
-    rating: undefined,
-    description: "",
-    note: "",
-  })
- 
-  // const [isLoading, setIsLoading] = useState(false)
-  // const [isError, setIsError] = useState<"string" | null>(null)
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const isoDate = new Date().toISOString().split("T")[0]
-
-    const updatedBookDetails = {
-      ...bookDetails,
-      dateRead: isoDate,
-    }
-    console.log("Form submitted:", updatedBookDetails)
-  }
-
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-
-    setBookDetails({
-      ...bookDetails,
-      [name]: name === "rating" ? Number(value) || undefined : value,
-    })
-  }
+  const {
+    bookDetails,
+    isLoading,
+    error,
+    handleChange,
+    handleSubmit
+  } = useBookForm()
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && <div className="error">{error}</div>}
+      
       <div>
         <label htmlFor="title">Title</label>
         <input
@@ -113,7 +86,9 @@ export default function BookForm() {
         />
       </div>
 
-      <button type="submit">Save Book</button>
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? "Saving..." : "Save Book"}
+      </button>
     </form>
   )
 }
