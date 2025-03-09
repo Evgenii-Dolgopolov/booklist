@@ -13,9 +13,9 @@ export function useBookForm(initialState: Partial<BookDetails> = {}) {
     rating: undefined,
     description: "",
     note: "",
-    ...initialState
+    ...initialState,
   })
-  
+
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -34,9 +34,9 @@ export function useBookForm(initialState: Partial<BookDetails> = {}) {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
-    
+
     try {
-      const response = await fetch("/books/add", {
+      const response = await fetch("/api/books", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,16 +44,24 @@ export function useBookForm(initialState: Partial<BookDetails> = {}) {
         body: JSON.stringify(bookDetails),
       })
 
-      const data = await response.json()
-      
       if (!response.ok) {
-        throw new Error(data.error || "Something went wrong")
+        // Try to parse error message from response
+        try {
+          const errorData = await response.json()
+          throw new Error(errorData.error || `Server error: ${response.status}`)
+        } catch (jsonError) {
+          throw new Error(`Failed to save book (${response.status})`)
+        }
       }
-      
+
+      const data = await response.json()
+
+      // Show success message or redirect
       router.push("/books")
       router.refresh()
       return data.data
     } catch (err) {
+      console.error("Error saving book:", err)
       setError(err instanceof Error ? err.message : "Failed to save book")
       return null
     } finally {
@@ -67,6 +75,6 @@ export function useBookForm(initialState: Partial<BookDetails> = {}) {
     isLoading,
     error,
     handleChange,
-    handleSubmit
+    handleSubmit,
   }
 }

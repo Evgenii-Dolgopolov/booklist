@@ -1,7 +1,5 @@
-export default function BookList() {
-  return (
-      <>
-        <h1>Book List Page</h1>
-      </>
-  )
+import Books from "@/components/books/Books"
+
+export default function BookPage() {
+  return <Books />
 }
