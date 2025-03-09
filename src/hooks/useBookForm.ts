@@ -36,7 +36,7 @@ export function useBookForm(initialState: Partial<BookDetails> = {}) {
     setError(null)
     
     try {
-      const response = await fetch("/api/books", {
+      const response = await fetch("/books/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
