@@ -1,8 +1,9 @@
-// src/components/books/BookList.tsx
+// src/components/books/Books.tsx
 
 "use client"
 
 import React, { useEffect, useState } from "react"
+import Link from "next/link"
 import { BookDetailsDbRecord, BookDetails } from "@/types"
 import { formatDateToDDMMYYYY } from "@/utils/formatters"
 import { transformDbRecordToBookDetails } from "@/utils/transformers"
@@ -65,11 +66,15 @@ export default function Books() {
         <ul>
           {books.map(book => (
             <li key={book.id}>
-              <h2>{book.title}</h2>
+              <Link href={`/books/${book.id}`}>
+                <h2>{book.title}</h2>
+              </Link>
               <p>Author: {book.author}</p>
               <p>ISBN: {book.isbn}</p>
               {book.dateRead && (
-                <p>Date Read: {formatDateToDDMMYYYY(new Date(book.dateRead))}</p>
+                <p>
+                  Date Read: {formatDateToDDMMYYYY(new Date(book.dateRead))}
+                </p>
               )}
               <p>Rating: {book.rating}</p>
               <p>Description: {book.description}</p>

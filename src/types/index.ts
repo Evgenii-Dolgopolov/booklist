@@ -1,7 +1,7 @@
 // src/types/types.ts
 
 export interface BookDetails {
-  id?: string
+  id?: number
   title: string
   author: string
   isbn: string
@@ -11,9 +11,20 @@ export interface BookDetails {
   note?: string
 }
 
-export interface BookDetailsDbRecord extends Omit<BookDetails, "dateRead"> {
-  id: string
-  date_read: string | Date | null
+export interface BookDetailsData {
+  id: number;
+  title: string;
+  author: string;
+  isbn: string;
+  rating: number;
+  description: string;
+  note: string;
+  dateRead?: Date;
+}
+
+export interface BookDetailsDbRecord extends Omit<BookDetails, "dateRead" | "id"> {
+  id: number
+  date_read: string
 }
 
 export interface initialBookDetails {
