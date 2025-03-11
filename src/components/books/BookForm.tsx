@@ -28,8 +28,8 @@ export default function BookForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
-    setError(null) // Reset any previous errors
-
+    setError(null) 
+    
     try {
       // Send the bookDetails state to the API endpoint
       const response = await fetch("/books/add/api", {
