@@ -1,5 +1,5 @@
 // src/utils/transformers.ts
-import { BookDetails, BookDetailsDbRecord } from "@/types/types"
+import { BookDetails, BookDetailsDbRecord } from "@/types"
 
 export function transformDbRecordToBookDetails(
   record: BookDetailsDbRecord
@@ -25,11 +25,10 @@ export function transformBookDetailsToDbRecord(
   }
 
   return {
-    id: book.id, // Now TypeScript knows this is not undefined
+    id: book.id,
     title: book.title,
     author: book.author,
     isbn: book.isbn,
-    // Add the rest of your transformation logic here
     date_read: book.dateRead ? new Date(book.dateRead).toISOString() : null,
     rating: book.rating,
     description: book.description,
